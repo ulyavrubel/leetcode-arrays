@@ -37,36 +37,68 @@
 // };
 
 var sortedSquares = function(nums) {
-    let left = [];
-    let right = nums;
+    let leftTemp = [];
+    let right = [];
 
-    for (let i = 1; i < nums.length; i++) {
-        if (nums[i - 1] < 0 && (nums[i] >= 0)) {           
-            left = nums.slice(0, i);
-            right = nums.slice(i);        
-        }            
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] < 0)
+          leftTemp.push(nums[i]);
+        else
+          right.push(nums[i]);          
     }
 
-//invert
-    for (let i = 0; i < right.length; i++)
+    const left = [];
 
+    for (let i = leftTemp.length - 1; i >=0; i--) {
+      left.push( Math.pow(leftTemp[i], 2))
+    }
 
-//pow for both
+    for (let i = 0; i < right.length; i++) {
+      right[i] = Math.pow(right[i], 2)
+    }
 
+    let res = [];
+    let iL = 0;
+    let iR = 0;
 
-//merge sorted https://www.geeksforgeeks.org/merge-sort/
-    console.log(left, right);
-    
-    // for (let i = 0; i < nums.length / 2 + 1; i++) {
-    //   if (Math.abs(nums[i]) >= Math.abs(nums[nums.length - i - 1]))
-    //     result.unshift(Math.pow(nums[nums.length - 1], 2), Math.pow(nums[i], 2))
-    // }
-    
-    // return result;    
+    console.log(left, right)
+
+    while (iL < left.length && iR < right.length) {
+      if (left[iL] < right[iR]) {
+        res.push(left[iL]);
+        iL++;
+      } else {
+        res.push(right[iR]);
+        iR++;
+      }
+    }
+
+    console.log(iL, iR)
+
+    return [...res, ...left.slice(iL), ...right.slice(iR)];   
     
 };
 
+console.log(sortedSquares([-5,-3,-2,-1]));
+// console.log(sortedSquares([-10000,-9999,-7,-5,0,0,10000]));
+// console.log(sortedSquares([]));
+// console.log(sortedSquares([1]));
 
-console.log(sortedSquares([-10000,-9999,-7,-5,0,0,10000]));
-console.log(sortedSquares([]));
-console.log(sortedSquares([1]));
+
+var sortedSquares = function(nums) {
+    let l = 0, r = nums.length - 1;
+    let res = new Array(nums.length);
+    let idx = nums.length - 1;
+    while(l <= r) {
+        let n1 = nums[l] ** 2;
+        let n2 = nums[r] ** 2;
+        if(n1 > n2) {
+            res[idx--] = n1;
+            l++;
+        } else {
+            res[idx--] = n2;
+            r--;
+        }
+    }
+    return res;
+};
